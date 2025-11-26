@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Виселица — игра</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="title">Виселица</div>
+      <div class="attempts">Оставшиеся попытки: <span id="attempts">—</span></div>
+    </header>
+
+    <section id="screen-themes" class="screen active">
+      <h1>Выберите тему слов</h1>
+      <p class="lead">После выбора темы будет загадано случайное слово и начнётся игра.</p>
+      <div class="grid">
+        <div class="card" data-theme="animals"><h3>Животные</h3></div>
+        <div class="card" data-theme="cities"><h3>Города</h3></div>
+        <div class="card" data-theme="tech"><h3>Технологии</h3></div>
+      </div>
+    </section>
+
+    <section id="screen-game" class="screen">
+      <h1>Угадайте слово</h1>
+      <p class="lead">Нажимайте буквы на клавиатуре. Подсказка открывает случайную скрытую букву.</p>
+      <div class="row">
+        <div class="panel">
+          <div id="word" class="word"></div>
+          <div class="toolbar">
+            <button id="hintBtn" class="btn secondary">Подсказка</button>
+            <button id="giveUpBtn" class="btn danger">Сдаться</button>
+          </div>
+          <div id="keyboard" class="keyboard"></div>
+        </div>
+        <div class="panel">
+          <div class="hangman">
+            <svg viewBox="0 0 200 240">
+              <line x1="20" y1="220" x2="180" y2="220" stroke="#3b4a7a" stroke-width="6"/>
+              <line x1="50" y1="220" x2="50" y2="20" stroke="#3b4a7a" stroke-width="6"/>
+              <line x1="50" y1="20"  x2="130" y2="20" stroke="#3b4a7a" stroke-width="6"/>
+              <line x1="130" y1="20" x2="130" y2="50" stroke="#3b4a7a" stroke-width="6"/>
+              <circle id="hg-head" cx="130" cy="70" r="20" stroke="#f7b267" stroke-width="5" class="hide"/>
+              <line id="hg-body" x1="130" y1="90" x2="130" y2="140" stroke="#f7b267" stroke-width="5" class="hide"/>
+              <line id="hg-armL" x1="130" y1="105" x2="108" y2="125" stroke="#f7b267" stroke-width="5" class="hide"/>
+              <line id="hg-armR" x1="130" y1="105" x2="152" y2="125" stroke="#f7b267" stroke-width="5" class="hide"/>
+              <line id="hg-legL" x1="130" y1="140" x2="112" y2="180" stroke="#f7b267" stroke-width="5" class="hide"/>
+              <line id="hg-legR" x1="130" y1="140" x2="148" y2="180" stroke="#f7b267" stroke-width="5" class="hide"/>
+              <line id="hg-eyeL" x1="123" y1="65" x2="126" y2="68" stroke="#f7b267" stroke-width="3" class="hide"/>
+              <line id="hg-eyeR" x1="134" y1="65" x2="137" y2="68" stroke="#f7b267" stroke-width="3" class="hide"/>
+              <line id="hg-mouth" x1="124" y1="78" x2="136" y2="78" stroke="#f7b267" stroke-width="3" class="hide"/>
+              <line id="hg-knot" x1="130" y1="50" x2="130" y2="60" stroke="#f7b267" stroke-width="3" class="hide"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-result" class="screen">
+      <div class="result">
+        <div id="status" class="status"></div>
+        <div id="wordReveal" class="word-reveal"></div>
+        <button id="newGameBtn" class="btn">Новая игра</button>
+      </div>
+    </section>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

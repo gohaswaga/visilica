@@ -1,5 +1,4 @@
-// Константы
-const MAX_ATTEMPTS = 10;
+const MAX_ATTEMPTS = 6;
 const ALPHABET = [
   'А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й',
   'К','Л','М','Н','О','П','Р','С','Т','У','Ф',
@@ -7,9 +6,20 @@ const ALPHABET = [
 ];
 const THEMES = {
   animals: ['ЛЕВ','ТИГР','КОРОВА','ПИНГВИН','ЖИРАФ','СОБАКА','КОШКА','МЕДВЕДЬ'],
-  cities: ['МИНСК','МОСКВА','ПАРИЖ','ЛОНДОН','БЕРЛИН','РИГА','КИЕВ'],
+  cities: ['МИНСК','МОСКВА','ПАРИЖ','ЛОНДОН','БЕРЛИН','РИГА','КОПЕНГАГЕН'],
   tech: ['АЛГОРИТМ','БРАУЗЕР','СЕРВЕР','ИНТЕРНЕТ','ФРЕЙМВОРК','ДАННЫЕ']
 };
+
+
+const hangmanImages = [
+  "https://upload.wikimedia.org/wikipedia/commons/8/8b/Hangman-0.png",
+  "https://upload.wikimedia.org/wikipedia/commons/3/30/Hangman-1.png",
+  "https://upload.wikimedia.org/wikipedia/commons/7/70/Hangman-2.png",
+  "https://upload.wikimedia.org/wikipedia/commons/9/97/Hangman-3.png",
+  "https://upload.wikimedia.org/wikipedia/commons/2/27/Hangman-4.png",
+  "https://upload.wikimedia.org/wikipedia/commons/6/6b/Hangman-5.png",
+  "https://upload.wikimedia.org/wikipedia/commons/d/d6/Hangman-6.png"
+];
 
 let secretWord = '';
 let revealed = [];
@@ -28,11 +38,7 @@ const giveUpBtn = document.getElementById('giveUpBtn');
 const statusEl = document.getElementById('status');
 const wordRevealEl = document.getElementById('wordReveal');
 const newGameBtn = document.getElementById('newGameBtn');
-
-const hangmanStages = [
-  'hg-knot','hg-head','hg-body','hg-armL','hg-armR',
-  'hg-legL','hg-legR','hg-eyeL','hg-eyeR','hg-mouth'
-].map(id => document.getElementById(id));
+const hangmanImgEl = document.getElementById('hangmanImage');
 
 function showScreen(el) {
   [screenThemes, screenGame, screenResult].forEach(s => s.classList.remove('active'));
@@ -47,7 +53,7 @@ function startGame(themeKey) {
   usedLetters.clear();
   gameOver = false;
 
-  hangmanStages.forEach(el => { el.classList.add('hide'); el.classList.remove('show'); });
+  hangmanImgEl.src = hangmanImages[0];
 
   renderWord();
   renderKeyboard();
@@ -117,7 +123,7 @@ function giveUp() {
   gameOver = true;
   attemptsLeft = 0;
   updateAttempts();
-  while(hangmanProgress()<MAX_ATTEMPTS) revealHangmanStage(true);
+  hangmanImgEl.src = hangmanImages[hangmanImages.length - 1];
   finish(false);
 }
 
@@ -126,15 +132,13 @@ function updateAttempts() {
 }
 
 function hangmanProgress() {
-  return hangmanStages.filter(el=>el.classList.contains('show')).length;
+  return MAX_ATTEMPTS - attemptsLeft;
 }
 
-function revealHangmanStage(force=false) {
+function revealHangmanStage() {
   const progress = hangmanProgress();
-  if (progress>=hangmanStages.length) return;
-  const el = hangmanStages[progress];
-  el.classList.remove('hide');
-  el.classList.add('show');
+  if (progress >= hangmanImages.length) return;
+  hangmanImgEl.src = hangmanImages[progress];
 }
 
 function checkWinLose() {
@@ -147,7 +151,7 @@ function finish(win) {
   statusEl.className = 'status ' + (win?'win':'lose');
   statusEl.textContent = win ? 'Победа!' : 'Поражение';
   wordRevealEl.textContent = 'Загаданное слово: ' + secretWord;
-  if (!win) hangmanStages.forEach(el=>{el.classList.remove('hide'); el.classList.add('show');});
+  if (!win) hangmanImgEl.src = hangmanImages[hangmanImages.length - 1];
 }
 
 document.querySelectorAll('.card').forEach(card=>{
@@ -157,11 +161,12 @@ hintBtn.addEventListener('click',useHint);
 giveUpBtn.addEventListener('click',giveUp);
 newGameBtn.addEventListener('click',()=>showScreen(screenThemes));
 
-window.addEventListener('keydown',e=>{
+window.addEventListener('keydown', e => {
   if (!screenGame.classList.contains('active') || gameOver) return;
   const letter = e.key.toUpperCase();
   if (ALPHABET.includes(letter)) {
-    const btn = [...keyboardEl.querySelectorAll('button.key')].find(b=>b.textContent===letter);
+    const btn = [...keyboardEl.querySelectorAll('button.key')]
+      .find(b => b.textContent === letter);
     if (btn && !btn.disabled) btn.click();
   }
 });
